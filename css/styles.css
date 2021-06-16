@@ -239,3 +239,56 @@ a {
 a:hover {
     text-decoration: underline;
 }
+
+
+#AudioPool video{
+    width: 760px;
+}
+
+#AudioPool #audioA, #AudioPool #audioB, #AudioPool #audioX{
+    display: none;
+}
+
+#playXBtn{
+    display: none;
+}
+
+.single_comment{
+    position: absolute;
+    width: 640px;
+    margin-top: 30px;
+}
+
+#TableContainer{
+    height: 300px;
+}
+
+.comment{
+    float: left;
+    position: relative;
+    width: 180px;
+}
+
+#TestTable tr{
+    float: left;
+    position: relative;
+}
+
+#selectA{
+    margin-left: 10px;
+}
+
+#selectB{
+    margin-left: 16px;
+}
+
+.select{
+    margin: 0 0 0 67px;
+
+    float: left;
+    position: relative;
+}
+
+#Volume{
+    display: none;
+}

@@ -21,6 +21,7 @@
     <link type="text/css" href="css/styles.css" rel="Stylesheet" />
 
     <script src="js/jquery.js" type="text/javascript"></script>
+    <script src="js/video.js" type="text/javascript"></script>
     <script src="js/jquery-ui.custom.min.js" type="text/javascript" ></script>
     <script src="js/beaqle.js" type="text/javascript"></script>
 
@@ -45,7 +46,7 @@
 <body>
 
 <div id="Wrapper">
-
+<form>
     <div id="TestTitle" class="commonBox">
         <!-- overall title at the top 
              DO NOT EDIT! This box is automatically filled with content!
@@ -136,6 +137,10 @@
     
     </div>
 
+    <div id="videocontainer">
+    	
+    </div>
+
     <!-- controls to go to next/previous test -->
     <div id="TestControls" class="commonBox">
         <button id="BtnNextTest">Next Test</>
@@ -155,8 +160,8 @@
         </div>
         
         <div>
-            <input id="ChkLoopAudio" type="checkbox" value="Loop" /><label for="ChkLoopAudio">Loop</label>
-            <input id="ChkAutoReturn" type="checkbox" value="Auto Return" /><label for="ChkAutoReturn">Auto Return</label>
+            <input id="ChkLoopAudio" type="checkbox" value="Loop" /><label for="BtnLoopAudio">Loop</label>
+            <!-- <input id="ChkAutoReturn" type="checkbox" value="Auto Return" /><label for="ChkAutoReturn">Auto Return</label> -->
         </div>
         
         <div id="Volume">
@@ -173,7 +178,7 @@
         This listening test has been created with <a href="https://github.com/HSU-ANT/beaqlejs" target="_blank">BeaqleJS</a> <a href="https://github.com/HSU-ANT/beaqlejs/tree/master" target="_blank">master</a>.
     </div>
 </div>
-
+</form>
 </body>
 
 </html>
