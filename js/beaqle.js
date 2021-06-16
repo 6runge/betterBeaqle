@@ -81,7 +81,7 @@
 
     // insert audio pool into DOM
     AudioPool.prototype.register = function() {
-        $('<div id="'+this.PoolID+'"></div>').appendTo('body');
+        $('<div id="'+this.PoolID+'"></div>').appendTo('#videocontainer');
     }
 
     // callback for timeUpdate event
@@ -139,19 +139,22 @@
     // add new file to pool
     AudioPool.prototype.addAudio = function(path, ID){
     
-        var audiotag = document.createElement("audio");
+        var audiotag = document.createElement("video");
 
         audiotag.setAttribute('src', path);
         audiotag.setAttribute('class', 'audiotags');
+        audiotag.setAttribute("controls", "controls");
         audiotag.setAttribute('id', "audio"+ID)
 
         if (this.waContext!==false) {
             var gainNode = this.waContext.createGain();
+            gainNode.value = 0.00000001;
             var source = this.waContext.createMediaElementSource(audiotag);
             source.connect(gainNode);
             gainNode.connect(this.waContext.destination);
-            gainNode.gain.value = 0.0000001;  // fixes https://bugzilla.mozilla.org/show_bug.cgi?id=1213313
-            gainNode.gain.setValueAtTime(0.0000001, this.waContext.currentTime);
+            //gainNode.gain.value = 0.0000001;  // fixes https://bugzilla.mozilla.org/show_bug.cgi?id=1213313
+            //gainNode.gain.setValueAtTime(0.0000001, this.waContext.currentTime); evtl doch kool?
+            gainNode.gain.setValueAtTime(0.0000001, 0);
             this.gainNodes[ID] = gainNode;
         }
         
@@ -175,23 +178,31 @@
     }
     
     // play audio with specified ID
-    AudioPool.prototype.play = function(ID){
-        var audiotag = $('#'+this.PoolID+' > #audio'+ID).get(0);
-        
-        if ((this.AutoReturn===false) &&
-            (this.lastAudioPosition + this.fadeDelay <= (this.ABPos[1] / 100 * audiotag.duration)) &&
-            (this.lastAudioPosition >= (this.ABPos[0] / 100 * audiotag.duration)))
-                audiotag.currentTime = this.lastAudioPosition;
-        else
-            audiotag.currentTime = 0.000001 + this.ABPos[0] / 100.0 * audiotag.duration;
+    // yussuf modified, now plays Video with subtitles as defined in config.js
+
+    AudioPool.prototype.play = function(ID, testID){
+        var audiotag = $('#'+this.PoolID+' > #audio'+ID).get(0);   
+        //var subtitles = document.createElement('track');
+        // var tmp = TestConfig.Testsets[testID].Files['sub'+ID];
+        // subtitles.setAttribute('src', tmp);
+        // subtitles.setAttribute('label', 'english');
+        // subtitles.setAttribute('kind', 'subtitles');
+        // subtitles.setAttribute('srclang', 'en-us');
+        // subtitles.default= true;
+        // audiotag.appendChild(subtitles);
+        // subtitles2.setAttribute('src', 'video/test.vtt');
+        // subtitles2.setAttribute('label', 'english');
+        // subtitles2.setAttribute('kind', 'subtitles');
+        // subtitles2.setAttribute('srclang', 'en-us');
+        // subtitles2.default= true;
+        // audiotag.appendChild(subtitles2);
+        audiotag.currentTime = 0.000001 + this.ABPos[0] / 100.0 * audiotag.duration;
 
         if (this.waContext!==false) {
             var loopLen = (this.ABPos[1] - this.ABPos[0]) / 100.0 * audiotag.duration;
             if (loopLen > this.fadeOutTime*2 + this.positionUpdateInterval*2) {
                 this.gainNodes[ID].gain.cancelScheduledValues(this.waContext.currentTime);
-                this.gainNodes[ID].gain.value = 0.0000001;  // fixes https://bugzilla.mozilla.org/show_bug.cgi?id=1213313
-                this.gainNodes[ID].gain.setValueAtTime(0.0000001, this.waContext.currentTime);                
-                this.gainNodes[ID].gain.setTargetAtTime(1.0, this.waContext.currentTime + this.fadeDelay, this.fadeInTime);
+                this.gainNodes[ID].gain.setTargetAtTime(1, this.waContext.currentTime, this.fadeOutTime/1.0 );
                 this.LoopFade = false;
                 audiotag.play();
             }
@@ -208,7 +219,7 @@
         if (this.waContext!==false) {
             // fade out
             this.gainNodes[this.IDPlaying].gain.cancelScheduledValues(this.waContext.currentTime);
-            this.gainNodes[this.IDPlaying].gain.setTargetAtTime(0.0, this.waContext.currentTime + this.fadeDelay, this.fadeOutTime);
+            this.gainNodes[this.IDPlaying].gain.setTargetAtTime(0, this.waContext.currentTime, this.fadeOutTime/8.0 );
             this.LoopFade = true;
 
             var audiotag = $('#'+this.PoolID+' > #audio'+this.IDPlaying).get(0);
@@ -218,10 +229,10 @@
             setTimeout( function(){
                     _this.LoopFade = false;
                     audiotag.currentTime = 0.000001 + _this.ABPos[0] / 100.0 * audiotag.duration;
-                    _this.gainNodes[_this.IDPlaying].gain.cancelScheduledValues(_this.waContext.currentTime);
-                    _this.gainNodes[_this.IDPlaying].gain.setTargetAtTime(1.0, _this.waContext.currentTime + _this.fadeDelay, _this.fadeInTime);
+                    _this.gainNodes[_this.IDPlaying].gain.cancelScheduledValues(_this.waContext.currentTime);       
+                    _this.gainNodes[_this.IDPlaying].gain.setTargetAtTime(1, _this.waContext.currentTime, _this.fadeOutTime/1.0 );
                 },
-                (_this.fadeOutTime*2.0 + _this.fadeDelay)*1000.0 + 5.0
+                this.fadeOutTime*1000 + 2
             );
         } else {
             // return to the start marker
@@ -240,7 +251,7 @@
             this.lastAudioPosition = audiotag.currentTime;
             if ((this.waContext!==false) && (!audiotag.paused)) {
                 this.gainNodes[this.IDPlaying].gain.cancelScheduledValues(this.waContext.currentTime);
-                this.gainNodes[this.IDPlaying].gain.setTargetAtTime(0.0, this.waContext.currentTime + this.fadeDelay, this.fadeOutTime );
+                this.gainNodes[this.IDPlaying].gain.setTargetAtTime(0, this.waContext.currentTime, this.fadeOutTime/8.0 );
 
                 var _this  = this;
                 var prevID = this.IDPlaying;
