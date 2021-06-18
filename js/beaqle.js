@@ -1125,7 +1125,7 @@ MushraTest.prototype.createTestDOM = function (TestIdx) {
         cell[0] = row.insertCell(-1);
         cell[0].innerHTML = "<span class='testItem'>Reference</span>";
         cell[1] = row.insertCell(-1);
-        cell[1].innerHTML =  '<button id="play'+fileID+'Btn" onclick="showVideo(this.id);" class="playButton" rel="'+fileID+'">Play</button>';
+        cell[1].innerHTML =  '<button id="play'+fileID+'Btn" onclick="showvideo(this.id);" class="playButton" rel="'+fileID+'">Play</button>';
         cell[2] = row.insertCell(-1);
         cell[2].innerHTML = "<button class='stopButton'>Stop</button>";  	
         cell[3] = row.insertCell(-1);

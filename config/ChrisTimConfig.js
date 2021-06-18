@@ -22,9 +22,9 @@ var TestConfig = {
       "Name": "Christians Lieblingsvideos",
       "TestID": "id1_1",
       "Files": {
-            "Reference": "video/00/reference.wav",
-            "1": "video/00/reference.wav",
-            "2": "video/00/reference.wav",
+            "Reference": "video/02/A.mp4",
+            "1": "video/01/bbb.mp4",
+            "2": "video/01/B.mp4",
         }
     },
     {
